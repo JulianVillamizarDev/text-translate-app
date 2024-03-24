@@ -3,7 +3,9 @@ const API_KEY = import.meta.env.PUBLIC_TRANSLATOR_API_KEY;
 const API_HOST = import.meta.env.PUBLIC_TRANSLATOR_API_HOST;
 
 export const getSupportLanguages = async () => {
-    const url = getApiUrl('/support-languages');
+    const url = getApiUrl('support-languages');
+    console.log(url);
+    
     const options = {
         method: 'GET',
         headers: {
@@ -11,9 +13,7 @@ export const getSupportLanguages = async () => {
             'X-RapidAPI-Host': API_HOST
         }
     };
-
-    const res = await fetch(url, options);
-    const data = await res.json();
+    const data = await fetch(url, options).then( res => res.json());
 
     return data;
 }

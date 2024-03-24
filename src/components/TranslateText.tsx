@@ -1,57 +1,70 @@
 import React, { useState, useEffect, type ChangeEvent, type FormEvent } from "react";
+import { SelectSearch } from "./SelectSearch";
 import { Loading } from "./Loading";
 import { getSupportLanguages } from "../services/languages";
+import { TextareaC } from "./Textarea";
+import type { Option } from "../types";
 
 export function TranslateText({ }) {
-
     const [languages, setLanguages] = useState([]);
-    const [inputLangauge, setInputLanguage] = useState('auto');
-    const [outputLanguage, setOutputLanguage] = useState('af');
-    const [text, setText] = useState('');
-    const [output, setOutput] = useState('');
+    const [inputLanguage, setInputLanguage] = useState("");
+    const [outputLanguage, setOutputLanguage] = useState("");
+    const [text, setText] = useState("");
+    const [output, setOutput] = useState("result");
 
     const handleInputLanguage = (event: ChangeEvent<HTMLSelectElement>) => {
         setInputLanguage(event.target.value);
-        
-    }
+    };
 
     const handleOutputLanguage = (event: ChangeEvent<HTMLSelectElement>) => {
         setOutputLanguage(event.target.value);
-    }
+        console.log(outputLanguage);
+    };
 
     const handleInputText = (event: FormEvent<HTMLTextAreaElement>) => {
         setText(event.currentTarget.value);
-    }
+    };
 
-    
     useEffect(() => {
-        const list = Promise.all([getSupportLanguages()])
-                            .then( (res) => console.log(res));
-    }, [])
+        const list = Promise.all([getSupportLanguages()]).then((res) => {
+            setInputLanguage(res[0][0].code);
+            const list = res[0].map(
+                (language: { code: string; language: string }) => ({
+                    key: language.code,
+                    item: language.language,
+                })
+            );
+            setLanguages(list);
+        });
+    }, []);
 
     return (
-        <div className="max-w-screen-xl m-auto flex flex-row gap-4">
+        <div className="max-w-screen-xl m-auto px-4 lg:px-0 flex flex-col lg:flex-row gap-4">
+            {/* input section */}
             <section className="flex flex-col gap-2 flex-1">
                 <div>
-                    <select
-                        className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
-                        onChange={handleInputLanguage}
-                    >
-                    </select>
+                    <SelectSearch label="Languages" options={languages}/>
                 </div>
-                <textarea key="inputText" name="inputText" className="w-full h-full bg-gray-800" onInput={handleInputText} />
+                <TextareaC
+                    key="input-text"
+                    value={inputLanguage}
+                    name="input-text"
+                />
             </section>
+            {/*output section*/}
             <section className="flex flex-col gap-2 flex-1">
                 <div>
-                    <select
-                        className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
-                        onChange={handleOutputLanguage}
-                    >
-                    </select>
+                    <SelectSearch label="Languages" options={languages.slice(1)}/>
                 </div>
-                <textarea key="inputText" name="inputText" className="w-full h-full bg-gray-800" />
+                <TextareaC
+                    key="output-text"
+                    onInput={() => { }}
+                    copiable
+                    value={output}
+                    name="output-text"
+                    disabled
+                />
             </section>
         </div>
     );
-
 }
