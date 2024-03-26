@@ -4,7 +4,6 @@ const API_HOST = import.meta.env.PUBLIC_TRANSLATOR_API_HOST;
 
 export const getSupportLanguages = async () => {
     const url = getApiUrl('support-languages');
-    console.log(url);
     
     const options = {
         method: 'GET',
@@ -14,6 +13,35 @@ export const getSupportLanguages = async () => {
         }
     };
     const data = await fetch(url, options).then( res => res.json());
+
+    return data;
+}
+
+export const translateText =  async (text: string, sourceLang: string, targetLang: string) => {
+    const url = getApiUrl('text');
+    const options = {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded',
+            'X-RapidAPI-Key': '2ded8f85ddmsh1c6e04a684642c7p1b8d94jsn245a9948ad9d',
+            'X-RapidAPI-Host': 'google-translate113.p.rapidapi.com'
+        },
+        body: new URLSearchParams({
+            from: sourceLang,
+            to: targetLang,
+            text: text
+        })
+    };
+
+    const data = await fetch(url, options)
+                .then(res => res.json())
+                .then( json => {
+                    if(json.message){
+                        return "Couldn't translate text";
+                    }
+                    return json.translate
+                })
+                .catch(err => "Couldn't translate text");
 
     return data;
 }

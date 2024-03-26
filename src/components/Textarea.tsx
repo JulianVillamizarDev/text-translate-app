@@ -1,37 +1,43 @@
-import { useState } from 'react';
+import { useState, type KeyboardEventHandler } from 'react';
 import {Textarea, Button} from "@nextui-org/react";
 
 interface Props {
-    onInput?: (event: React.FormEvent<HTMLInputElement>) => void;
+    onChange?: (event: React.ChangeEvent <HTMLInputElement>) => void;
     name: string;
     copiable?: boolean;
-    value?: string;
+    text?: string;
     disabled?: boolean;
+    counter?: boolean;
+    counterValue?: number;
+    counterLimit?: number; //default length set to 1000 
+    readOnly?: boolean;
 }
 
 export function TextareaC(props: Props) {
-    const {onInput, name, copiable, value, disabled} = props;
-    const MAX_LENGTH = 1000;
+    const { onChange, name, copiable, disabled, text = '', counter, counterValue, counterLimit = 1000, readOnly } = props;
     return (
-        <div className='relative w-full h-full'>
+        <div className='relative max-w-full'>
             <Textarea 
-                onInput={onInput}
+                value={text}
                 name={name}
-                value={value}
-                className='w-full h-full resize-none'
+                fullWidth
                 disabled={disabled}
+                onChange={onChange}
+                readOnly={readOnly}
+                maxLength={counterLimit}
+                minRows={5}
             />
             <div className='absolute bottom-0 right-0 p-2'>
                 {
-                    props.value && 
+                    counter && 
                         <span className='p-2 text-gray-400'>
-                            {props.value.length}/{MAX_LENGTH}
+                            {counterValue}/{counterLimit}
                         </span>
                 } 
                 {
-                    copiable && value &&
+                    copiable &&
                     <Button 
-                        onClick={() => navigator.clipboard.writeText(value)} 
+                        onClick={() => navigator.clipboard.writeText(text)} 
                         color='primary' 
                         variant='light'
                     >

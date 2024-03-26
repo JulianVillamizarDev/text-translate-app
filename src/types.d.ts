@@ -1,4 +1,9 @@
 export interface Option {
-    item: string;
-    key: string;
+    label: string;
+    value: string;
+}
+
+export interface Language {
+    code: string;
+    language: string;
 }
