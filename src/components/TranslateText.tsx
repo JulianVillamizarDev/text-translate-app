@@ -66,6 +66,7 @@ export function TranslateText({ }) {
                     text={text}
                     counter
                     counterValue={text.length}
+                    textToSpeech
                 />
                 <Button 
                     variant="flat" 
@@ -91,6 +92,7 @@ export function TranslateText({ }) {
                     text={output}
                     name="output-text"
                     readOnly
+                    textToSpeech
                 />
             </section>
         </div>

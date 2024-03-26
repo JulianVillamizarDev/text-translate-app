@@ -23,8 +23,8 @@ export const translateText =  async (text: string, sourceLang: string, targetLan
         method: 'POST',
         headers: {
             'content-type': 'application/x-www-form-urlencoded',
-            'X-RapidAPI-Key': '2ded8f85ddmsh1c6e04a684642c7p1b8d94jsn245a9948ad9d',
-            'X-RapidAPI-Host': 'google-translate113.p.rapidapi.com'
+            'X-RapidAPI-Key': API_KEY,
+            'X-RapidAPI-Host': API_HOST
         },
         body: new URLSearchParams({
             from: sourceLang,
